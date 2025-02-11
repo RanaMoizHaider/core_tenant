@@ -20,15 +20,27 @@ class SubscriptionResource extends Resource
 {
     protected static ?string $model = Subscription::class;
 
+    public static function getNavigationGroup(): string
+    {
+        return __('Administration');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('My Subscriptions');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('My Subscription');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('My Subscriptions');
+    }
+
     protected static ?string $navigationIcon = 'fas-hand-holding-dollar';
-
-    protected static ?string $navigationGroup = 'Administração';
-
-    protected static ?string $navigationLabel = 'Minhas Assinaturas';
-
-    protected static ?string $modelLabel = 'Minha Assinatura';
-
-    protected static ?string $modelLabelPlural = "Minhas Assinaturas";
 
     protected static ?int $navigationSort = 1;
 
@@ -45,7 +57,7 @@ class SubscriptionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('stripe_status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->formatStateUsing(fn ($state) => SubscriptionStatusEnum::from($state)->getLabel())
                     ->color(fn ($state) => SubscriptionStatusEnum::from($state)->getColor())
@@ -54,9 +66,8 @@ class SubscriptionResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('stripe_period')
-                    ->label('Tipo do Plano')
+                    ->label(__('Plan Type'))
                     ->getStateUsing(function ($record) {
-                        // Acessa o preço relacionado via o relacionamento definido
                         return $record->price->interval;
                     })
                     ->badge()
@@ -64,9 +75,8 @@ class SubscriptionResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('stripe_price')
-                    ->label('Valor do Plano')
+                    ->label(__('Plan Value'))
                     ->getStateUsing(function ($record) {
-                        // Acessa o preço relacionado via o relacionamento definido
                         return $record->price->unit_amount;
                     })
                     ->money('brl')
@@ -74,42 +84,39 @@ class SubscriptionResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('trial_ends_at')
-                    ->label('Fim Período de Teste')
+                    ->label(__('Trial Period End'))
                     ->alignCenter()
                     ->dateTime('d/m/Y'),
 
                 TextColumn::make('current_period_start')
-                    ->label('Inicio da Cobrança')
+                    ->label(__('Billing Start'))
                     ->alignCenter()
                     ->dateTime('d/m/Y'),
 
                 TextColumn::make('ends_at')
-                    ->label('Expira em')
+                    ->label(__('Expires At'))
                     ->alignCenter()
                     ->dateTime('d/m/Y'),
 
                 TextColumn::make('remaining_time')
-                    ->label('Tempo Restante')
-
+                    ->label(__('Remaining Time'))
                     ->getStateUsing(function ($record) {
                         $endsAt = $record->ends_at ? Carbon::parse($record->ends_at) : null;
 
                         if (!$endsAt) {
-                            return 'Sem data definida';
+                            return __('No date defined');
                         }
 
                         $now = now();
 
-                        // Verifica se o plano já expirou
                         if ($now > $endsAt) {
-                            return 'Expirado';
+                            return __('Expired');
                         }
 
-                        // Calcula a diferença total em dias e horas
                         $remainingDays  = $now->diffInDays($endsAt, false);
                         $remainingHours = $now->diffInHours($endsAt) % 24;
 
-                        return sprintf('%d dias e %02d horas', $remainingDays, $remainingHours);
+                        return sprintf(__('%d days and %02d hours'), $remainingDays, $remainingHours);
                     })
                     ->alignCenter(),
             ])
@@ -124,7 +131,7 @@ class SubscriptionResource extends Resource
                             Fieldset::make('Motivo do Cancelamento')
                                 ->schema([
                                     Select::make('reason')
-                                        ->label('Selecione o Motivo')
+                                        ->label(__('Select Reason'))
                                         ->options(CancelSubscriptionEnum::class)
                                         ->required(),
                                 ])->columns(1),
@@ -132,7 +139,7 @@ class SubscriptionResource extends Resource
                             Fieldset::make('Suas Impressões')
                                 ->schema([
                                     Textarea::make('coments')
-                                        ->label('Comentário ou Feedback')
+                                        ->label(__('Comments or Feedback'))
                                         ->rows(4)
                                         ->columnSpan('full'),
                                 ])->columns(1),
@@ -140,19 +147,17 @@ class SubscriptionResource extends Resource
                             Fieldset::make('Sua Nota')
                                 ->schema([
                                     RatingStar::make('rating')
-                                        ->label('Avaliação')
+                                        ->label(__('Rating'))
                                         ->required()
                                         ->columnSpan('full'),
                                 ])->columns(1),
 
                         ])
                         ->requiresConfirmation()
-                        ->modalHeading('Confirmar Cancelamento')
+                        ->modalHeading(__('Confirm Cancellation'))
                         ->modalDescription(function ($record) {
-                            // Usando Carbon para formatar a data ends_at
-                            $endsAt = Carbon::parse($record->ends_at)->format('d/m/Y H:i'); // Formato desejado
-
-                            return "Atenção!!! após o cancelamento você terá acesso a plataforma até: {$endsAt}, após essa data nenhuma cobrança será feita, seus acessos serão revogados e todos os dados serão apagados. Deseja continuar?";
+                            $endsAt = Carbon::parse($record->ends_at)->format('d/m/Y H:i');
+                            return __('Warning!!! After cancellation, you will have access to the platform until: :date. After this date, no charges will be made, your access will be revoked, and all data will be deleted. Do you want to continue?', ['date' => $endsAt]);
                         })
                         ->slideOver()
                         ->slideOver()
@@ -165,8 +170,8 @@ class SubscriptionResource extends Resource
                             } catch (\Exception $e) {
 
                                 Notification::make()
-                                    ->title('Erro ao Criar Preço')
-                                    ->body('Ocorreu um erro ao criar o preço no Stripe: ' . $e->getMessage())
+                                    ->title(__('Error Creating Price'))
+                                    ->body(__('An error occurred while creating the price in Stripe: ') . $e->getMessage())
                                     ->danger()
                                     ->send();
                             }
@@ -175,11 +180,11 @@ class SubscriptionResource extends Resource
                         ->color('danger')
                         ->icon('heroicon-o-key'),
 
-                    Action::make('Baixar Invoice')
-                        ->label('Baixar Invoice')
+                    Action::make('Download Invoice')
+                        ->label(__('Download Invoice'))
                         ->icon('heroicon-o-document-arrow-down')
                         ->url(fn ($record) => $record->invoice_pdf)
-                        ->tooltip('Baixar PDF da Fatura')
+                        ->tooltip(__('Download Invoice PDF'))
                         ->color('primary'),
                 ])
                 ->icon('fas-sliders')

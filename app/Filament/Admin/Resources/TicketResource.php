@@ -22,15 +22,27 @@ class TicketResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-comment-dots';
 
-    protected static ?string $navigationGroup = 'Administração';
-
-    protected static ?string $navigationLabel = 'Solicitações';
-
-    protected static ?string $modelLabel = 'Ticket';
-
-    protected static ?string $modelLabelPlural = "Tickets";
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string
+    {
+        return __('Administration');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Requests');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Ticket');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Tickets');
+    }
 
     public static function getNavigationBadge(): ?string
     {
@@ -44,91 +56,83 @@ class TicketResource extends Resource
     {
         return $form
             ->schema([
-
-                Fieldset::make('Empresa')
+                Fieldset::make(__('Company'))
                     ->schema([
                         TextInput::make('title')
-                            ->label('Assunto')
+                            ->label(__('Subject'))
                             ->required()
                             ->maxLength(50),
 
                         Select::make('organization_id')
-                            ->label('Empresa')
+                            ->label(__('Company'))
                             ->required()
-                            ->options(Organization::all()->pluck('name', 'id')) // Exibe todas as organizações
+                            ->options(Organization::all()->pluck('name', 'id'))
                             ->afterStateUpdated(function (Set $set, $state) {
-                                // Limpar o campo de usuário quando a organização for alterada
                                 $set('user_id', null);
                             }),
 
                         Select::make('user_id')
-                            ->label('Usuario')
-                            ->searchable()   // Permite pesquisa
-                            ->preload()      // Carrega os dados de forma antecipada
-                            ->live()          // Atualiza as opções em tempo real
+                            ->label(__('User'))
+                            ->searchable()
+                            ->preload()
+                            ->live()
                             ->required()
                             ->options(function ($get) {
-                                // Obter o ID da organização selecionada
                                 $organizationId = $get('organization_id');
 
-                                // Verificar se a organização foi selecionada
                                 if ($organizationId) {
-                                    // Carregar os membros (usuários) da organização selecionada
                                     $organization = Organization::find($organizationId);
 
                                     if ($organization) {
-                                        // Acessar os membros e retornar um array de opções
-                                        return $organization->members->pluck('name', 'id')->toArray(); // Usando pluck para extrair os dados
+                                        return $organization->members->pluck('name', 'id')->toArray();
                                     }
                                 }
 
-                                // Se não houver organização selecionada, retornar um array vazio
                                 return [];
                             }),
                     ])->columns(3),
 
-                Fieldset::make('Classificação')
+                Fieldset::make(__('Classification'))
                     ->schema([
                         Select::make('status')
-                            ->label('Status')
+                            ->label(__('Status'))
                             ->options(TicketStatusEnum::class)
                             ->searchable()
                             ->required(),
 
                         Select::make('type')
-                            ->label('Tipo')
+                            ->label(__('Type'))
                             ->options(TicketTypeEnum::class)
                             ->searchable()
                             ->required(),
 
                         Select::make('priority')
-                            ->label('Prioridade')
+                            ->label(__('Priority'))
                             ->options(TicketPriorityEnum::class)
                             ->searchable()
                             ->required(),
 
                     ])->columns(3),
 
-                Fieldset::make('Detalhes do Ticket')
+                Fieldset::make(__('Ticket Details'))
                     ->schema([
                         RichEditor::make('description')
-                            ->label('Detalhamento')
+                            ->label(__('Description'))
                             ->required()
                             ->columnSpanFull(),
                     ]),
 
-                Fieldset::make('Anexos')
+                Fieldset::make(__('Attachments'))
                     ->schema([
                         FileUpload::make('file')
                             ->multiple()
-                            ->label('Arquivos'),
+                            ->label(__('Files')),
 
                         FileUpload::make('image_path')
-                            ->label('Imagens')
+                            ->label(__('Images'))
                             ->image()
                             ->imageEditor(),
                     ])->columns(2),
-
             ]);
     }
 
@@ -137,7 +141,7 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('Solicitação')
+                    ->label(__('Request'))
                     ->alignCenter()
                     ->sortable(),
 
@@ -145,65 +149,65 @@ class TicketResource extends Resource
                     ->label('Tenant')
                     ->numeric()
                     ->sortable(),
+
                 TextColumn::make('user.name')
-                    ->label('Solicitante')
+                    ->label(__('Requester'))
                     ->numeric()
                     ->sortable(),
 
                 TextColumn::make('title')
-                    ->label('Assunto')
+                    ->label(__('Subject'))
                     ->searchable(),
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->alignCenter()
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('priority')
-                    ->label('Prioridade')
+                    ->label(__('Priority'))
                     ->alignCenter()
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('type')
-                    ->label('Tipo')
+                    ->label(__('Type'))
                     ->alignCenter()
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('lifetime')
-                    ->label('Tempo de Vida')
+                    ->label(__('Lifetime'))
                     ->getStateUsing(function (Model $record) {
                         $createdAt = Carbon::parse($record->created_at);
                         $closedAt  = $record->closed_at ? Carbon::parse($record->closed_at) : now();
                         $diff      = $createdAt->diff($closedAt);
 
-                        return "{$diff->d} dias, {$diff->h} horas";
+                        return "{$diff->d} days, {$diff->h} hours";
                     })
                     ->alignCenter()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Criado em')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('closed_at')
-                    ->label('Fechado em')
+                    ->label(__('Closed at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Atualizado em')
+                    ->label(__('Updated at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
             ])
             ->actions([
                 ActionGroup::make([

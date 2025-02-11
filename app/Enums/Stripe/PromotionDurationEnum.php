@@ -13,9 +13,9 @@ enum PromotionDurationEnum: string implements HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::FOREVER   => 'Sempre Ativo',
-            self::ONCE      => 'Uma Vez',
-            self::REPEATING => 'Recorrente',
+            self::FOREVER   => __('Active Forever'),
+            self::ONCE      => __('One Time'),
+            self::REPEATING => __('Recurring'),
         };
     }
 

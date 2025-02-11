@@ -22,58 +22,70 @@ class TicketResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-bullhorn';
 
-    protected static ?string $navigationGroup = 'Suporte';
-
-    protected static ?string $navigationLabel = 'Solicitações';
-
-    protected static ?string $modelLabel = 'Ticket';
-
-    protected static ?string $modelLabelPlural = "Tickets";
-
     protected static ?int $navigationSort = 1;
 
     protected static bool $isScopedToTenant = true;
+
+    public static function getNavigationGroup(): string
+    {
+        return __('Support');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Requests');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Ticket');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Tickets');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Fieldset::make('Classificação')
+                Fieldset::make(__('Classification'))
                     ->schema([
                         TextInput::make('title')
-                            ->label('Assunto')
+                            ->label(__('Subject'))
                             ->required()
                             ->maxLength(50),
 
                         Select::make('type')
-                            ->label('Tipo')
+                            ->label(__('Type'))
                             ->options(TicketTypeEnum::class)
                             ->searchable()
                             ->required(),
 
                         Select::make('priority')
-                            ->label('Prioridade')
+                            ->label(__('Priority'))
                             ->options(TicketPriorityEnum::class)
                             ->searchable()
                             ->required(),
                     ])->columns(3),
 
-                Fieldset::make('Detalhes do Ticket')
+                Fieldset::make(__('Ticket Details'))
                     ->schema([
                         RichEditor::make('description')
-                            ->label('Detalhamento')
+                            ->label(__('Details'))
                             ->required()
                             ->columnSpanFull(),
                     ]),
 
-                Fieldset::make('Anexos')
+                Fieldset::make(__('Attachments'))
                     ->schema([
                         FileUpload::make('file')
                             ->multiple()
-                            ->label('Arquivos'),
+                            ->label(__('Files')),
 
                         FileUpload::make('image_path')
-                            ->label('Imagens')
+                            ->label(__('Images'))
                             ->image()
                             ->imageEditor(),
 
@@ -86,58 +98,58 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('Solicitação')
+                    ->label(__('Request'))
                     ->alignCenter()
                     ->sortable(),
 
                 TextColumn::make('user.name')
-                    ->label('Solicitante')
+                    ->label(__('Requester'))
                     ->numeric()
                     ->sortable(),
 
                 TextColumn::make('title')
-                    ->label('Assunto')
+                    ->label(__('Subject'))
                     ->searchable(),
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->alignCenter()
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('priority')
-                    ->label('Prioridade')
+                    ->label(__('Priority'))
                     ->alignCenter()
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('type')
-                    ->label('Tipo')
+                    ->label(__('Type'))
                     ->alignCenter()
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('lifetime')
-                    ->label('Tempo de Vida')
+                    ->label(__('Lifetime'))
                     ->getStateUsing(function (Model $record) {
                         $createdAt = Carbon::parse($record->created_at);
                         $closedAt  = $record->closed_at ? Carbon::parse($record->closed_at) : now();
                         $diff      = $createdAt->diff($closedAt);
 
-                        return "{$diff->d} dias, {$diff->h} horas";
+                        return "{$diff->d} days, {$diff->h} hours";
 
                     })
                     ->alignCenter()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Criado em')
-                    ->dateTime('d/m/Y H:m:s')
+                    ->label(__('Created at'))
+                    ->dateTime('Y-m-d H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Atualizado em')
+                    ->label(__('Updated at'))
                     ->dateTime('d/m/Y H:m:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -146,11 +158,11 @@ class TicketResource extends Resource
             ->filters([])
             ->groups([
                 Group::make('user.name')
-                    ->label('Usuário'),
+                    ->label(__('User')),
                 Group::make('status')
-                    ->label('Status'),
+                    ->label(__('Status')),
                 Group::make('type')
-                    ->label('Tipo'),
+                    ->label(__('Type')),
             ])
 
             ->actions([

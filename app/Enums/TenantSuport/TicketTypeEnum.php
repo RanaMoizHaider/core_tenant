@@ -12,8 +12,8 @@ enum TicketTypeEnum: string implements HasLabel, HasColor
     public function getLabel(): string
     {
         return match ($this) {
-            self::PROBLEM     => 'Problema',
-            self::ENHANCEMENT => 'Melhoria',
+            self::PROBLEM     => __('Problem'),
+            self::ENHANCEMENT => __('Enhancement'),
         };
     }
 

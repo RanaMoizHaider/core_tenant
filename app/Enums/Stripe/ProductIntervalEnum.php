@@ -14,10 +14,10 @@ enum ProductIntervalEnum: string implements HasLabel, HasColor, HasDescription
     public function getLabel(): string
     {
         return match ($this) {
-            self::YEAR  => 'Anual',
-            self::MONTH => 'Mensal',
-            self::WEEK  => 'Semanal',
-            self::DAY   => 'Diaria',
+            self::YEAR  => __('Yearly'),
+            self::MONTH => __('Monthly'),
+            self::WEEK  => __('Weekly'),
+            self::DAY   => __('Daily'),
         };
     }
     public function getColor(): string|array|null
@@ -33,10 +33,10 @@ enum ProductIntervalEnum: string implements HasLabel, HasColor, HasDescription
     public function getDescription(): string
     {
         return match ($this) {
-            self::YEAR  => 'Ano',
-            self::MONTH => 'Mês',
-            self::WEEK  => 'Semana',
-            self::DAY   => 'Dia',
+            self::YEAR  => __('Year'),
+            self::MONTH => __('Month'),
+            self::WEEK  => __('Week'),
+            self::DAY   => __('Day'),
         };
     }
 }

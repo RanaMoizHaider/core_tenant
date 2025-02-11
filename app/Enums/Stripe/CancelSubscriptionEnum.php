@@ -17,13 +17,13 @@ enum CancelSubscriptionEnum: string implements HasLabel, HasColor, HasDescriptio
     public function getLabel(): string
     {
         return match ($this) {
-            self::CUSTUMER_SERVICE => 'Atendimento Ruim',
-            self::LOW_QUALITY      => 'Baixa Qualidade',
-            self::MISSING_FEATURES => 'Falta Recursos',
-            self::SWITCHED_SERVICE => 'Mudando de Provedor',
-            self::TOO_COMPLEX      => 'Muito Complexo',
-            self::TOO_EXPENSIVE    => 'Muito caro',
-            self::UNUSED           => 'Não Uso',
+            self::CUSTUMER_SERVICE => __('Poor Customer Service'),
+            self::LOW_QUALITY      => __('Low Quality'),
+            self::MISSING_FEATURES => __('Missing Features'),
+            self::SWITCHED_SERVICE => __('Switching Provider'),
+            self::TOO_COMPLEX      => __('Too Complex'),
+            self::TOO_EXPENSIVE    => __('Too Expensive'),
+            self::UNUSED           => __('Not Using'),
         };
     }
     public function getColor(): string|array|null
@@ -42,14 +42,13 @@ enum CancelSubscriptionEnum: string implements HasLabel, HasColor, HasDescriptio
     public function getDescription(): string
     {
         return match ($this) {
-            self::CUSTUMER_SERVICE => 'O atendimento ao cliente foi menor do que o esperado',
-            self::LOW_QUALITY      => 'A qualidade ficou abaixo do esperado',
-            self::MISSING_FEATURES => 'Alguns recursos estão faltando',
-            self::SWITCHED_SERVICE => 'Estou mudando para um serviço diferente',
-            self::TOO_COMPLEX      => 'A facilidade de uso foi menor do que o esperado',
-            self::TOO_EXPENSIVE    => 'É muito caro',
-            self::UNUSED           => 'Não uso o serviço o suficiente',
-
+            self::CUSTUMER_SERVICE => __('Customer service was below expectations'),
+            self::LOW_QUALITY      => __('Quality was below expectations'),
+            self::MISSING_FEATURES => __('Some features are missing'),
+            self::SWITCHED_SERVICE => __('Switching to a different service'),
+            self::TOO_COMPLEX      => __('Ease of use was below expectations'),
+            self::TOO_EXPENSIVE    => __('It is too expensive'),
+            self::UNUSED           => __('Not using the service enough'),
         };
     }
 }

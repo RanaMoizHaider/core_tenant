@@ -15,11 +15,11 @@ enum RefundStatusEnum: string implements HasLabel, HasColor
     public function getLabel(): string
     {
         return match ($this) {
-            self::PENDING         => 'Pendente',
-            self::REQUIRES_ACTION => 'Requer Ação',
-            self::SUCCEEDED       => 'Realizada',
-            self::FAILED          => 'Falhou',
-            self::CANCELED        => 'Cancelado',
+            self::PENDING         => __('Pending'),
+            self::REQUIRES_ACTION => __('Requires Action'),
+            self::SUCCEEDED       => __('Succeeded'),
+            self::FAILED          => __('Failed'),
+            self::CANCELED        => __('Canceled'),
         };
     }
 

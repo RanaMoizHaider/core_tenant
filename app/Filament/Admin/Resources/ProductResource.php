@@ -21,13 +21,25 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-hand-holding-dollar';
 
-    protected static ?string $navigationGroup = 'Planos';
+    public static function getNavigationGroup(): string
+    {
+        return __('Plans');
+    }
 
-    protected static ?string $navigationLabel = 'Planos';
+    public static function getNavigationLabel(): string
+    {
+        return __('Plans');
+    }
 
-    protected static ?string $modelLabel = 'Plano';
+    public static function getModelLabel(): string
+    {
+        return __('Plan');
+    }
 
-    protected static ?string $modelLabelPlural = "Planos";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Plans');
+    }
 
     protected static ?int $navigationSort = 1;
 
@@ -41,25 +53,25 @@ class ProductResource extends Resource
                 Fieldset::make('Label')
                     ->schema([
                         TextInput::make('stripe_id')
-                            ->label('Id Plano Stripe')
+                            ->label(__('Stripe Plan ID'))
                             ->readOnly(),
 
                         TextInput::make('name')
-                            ->label('Nome do Plano')
+                            ->label(__('Plan Name'))
                             ->required()
                             ->maxLength(255),
 
                         TextInput::make('description')
-                            ->label('Descrição do Plano')
+                            ->label(__('Plan Description'))
                             ->required()
                             ->maxLength(255),
 
                     ])->columns(3),
 
-                Fieldset::make('Imagem do Plano')
+                Fieldset::make(__('Plan Image'))
                 ->schema([
                     FileUpload::make('image')
-                        ->label('Imagem do Plano')
+                        ->label(__('Plan Image'))
                         ->image()
                         ->imageEditor()
                         ->columnSpanFull(),
@@ -73,30 +85,30 @@ class ProductResource extends Resource
             ->columns([
 
                 TextColumn::make('stripe_id')
-                    ->label('Id Plano Stripe')
+                    ->label(__('Stripe Plan ID'))
                 ->searchable(),
 
                 TextColumn::make('description')
-                    ->label('Descrição do Plano')
+                    ->label(__('Plan Description'))
                     ->searchable(),
 
                 TextColumn::make('name')
-                    ->label('Nome do Plano')
+                    ->label(__('Plan Name'))
                     ->searchable(),
 
                 TextColumn::make('prices_count')
-                    ->label('Preços Cadastrados')
+                    ->label(__('Registered Prices'))
                     ->alignCenter()
                     ->sortable()
                     ->getStateUsing(fn ($record) => (string) $record->prices()->count()),
 
                 TextColumn::make('features_count')
-                    ->label('Características')
+                    ->label(__('Features'))
                     ->alignCenter()
                     ->getStateUsing(fn ($record) => (string) $record->product_features()->where('is_active', true)->count()),
 
                 ToggleColumn::make('is_active')
-                    ->label('Ativo')
+                    ->label(__('Active'))
                     ->alignCenter(),
 
                 TextColumn::make('created_at')
@@ -124,14 +136,14 @@ class ProductResource extends Resource
                             $deleteStripeProductService->execute($record);
 
                             Notification::make()
-                                ->title('Produto Excluído')
-                                ->body('Produto excluído com sucesso!')
+                                ->title(__('Product Deleted'))
+                                ->body(__('Product deleted successfully!'))
                                 ->success()
                                 ->send();
 
                         } catch (\Exception $e) {
                             Notification::make()
-                                ->title('Erro ao Excluir')
+                                ->title(__('Delete Error'))
                                 ->body($e->getMessage())
                                 ->danger()
                                 ->send();

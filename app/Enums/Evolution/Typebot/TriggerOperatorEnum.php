@@ -15,11 +15,11 @@ enum TriggerOperatorEnum: string implements HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::CONTAINS  => 'Contem',
-            self::EQUALS    => 'Igual',
-            self::STARTWITH => 'Começa com',
-            self::ENDSWITH  => 'Termina com',
-            self::REGEX     => 'Regex',
+            self::CONTAINS  => __('Contains'),
+            self::EQUALS    => __('Equals'),
+            self::STARTWITH => __('Starts With'),
+            self::ENDSWITH  => __('Ends With'),
+            self::REGEX     => __('Regex'),
         };
     }
 

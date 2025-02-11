@@ -15,10 +15,10 @@ enum TicketPriorityEnum: string implements HasLabel, HasColor
     {
         return match ($this) {
 
-            self::LOW    => 'Baixa',
-            self::MEDIUM => 'Média',
-            self::HIGH   => 'Alta',
-            self::URGENT => 'Urgente',
+            self::LOW    => __('Low'),
+            self::MEDIUM => __('Medium'),
+            self::HIGH   => __('High'),
+            self::URGENT => __('Urgent'),
 
         };
     }

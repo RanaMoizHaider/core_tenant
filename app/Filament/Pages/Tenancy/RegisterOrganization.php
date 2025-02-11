@@ -15,7 +15,7 @@ class RegisterOrganization extends RegisterTenant
 {
     public static function getLabel(): string
     {
-        return 'Registrar Empresa';
+        return __('Register Company');
     }
 
     public function form(Form $form): Form
@@ -24,7 +24,7 @@ class RegisterOrganization extends RegisterTenant
             ->schema([
 
                 TextInput::make('name')
-                    ->label('Nome da Empresa')
+                    ->label(__('Company Name'))
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, $state) {
@@ -32,43 +32,43 @@ class RegisterOrganization extends RegisterTenant
                     }),
 
                 TextInput::make('email')
-                    ->label('E-mail Principal')
+                    ->label(__('Primary Email'))
                     ->unique(Organization::class, 'email', ignoreRecord: true)
                     ->email()
                     ->required()
                     ->prefixIcon('fas-envelope')
                     ->validationMessages([
-                        'unique' => 'E-mail já cadastrado.',
+                        'unique' => __('Email already registered.'),
                     ]),
 
                 PhoneNumber::make('phone')
-                    ->label('Celular da Empresa')
+                    ->label(__('Company Phone'))
                     ->unique(Organization::class, 'phone', ignoreRecord: true)
                     ->required()
                     ->mask('(99) 99999-9999')
                     ->prefixIcon('fas-phone')
                     ->validationMessages([
-                        'unique' => 'Telefone ja cadastrado.',
+                        'unique' => __('Phone number already registered.'),
                     ]),
 
                 Document::make('document_number')
-                    ->label('Documento da Empresa (CPF ou CNPJ)')
+                    ->label(__('Company Document (CPF or CNPJ)'))
                     ->unique(Organization::class, 'document_number', ignoreRecord: true)
                     ->validation(false)
                     ->required()
                     ->dynamic()
                     ->prefixIcon('fas-id-card')
                     ->validationMessages([
-                        'unique' => 'Documento já cadastrado.',
+                        'unique' => __('Document already registered.'),
                     ]),
 
                 TextInput::make('slug')
-                    ->label('Essa será a URL da sua empresa')
+                    ->label(__('This will be your company URL'))
                     ->unique(Organization::class, 'slug', ignoreRecord: true)
                     ->readonly()
                     ->prefixIcon('fas-globe')
                     ->validationMessages([
-                        'unique' => 'Url em Uso, altere nome da empresa',
+                        'unique' => __('URL in use, change company name'),
                     ]),
             ]);
     }
@@ -83,7 +83,7 @@ class RegisterOrganization extends RegisterTenant
             'stripe_id' => $customer->id,
         ]));
 
-        // Vincula o usuário autenticado como membro da organização
+        // Link the authenticated user as a member of the organization
         $organization->members()->attach(Auth::user());
 
         return $organization;

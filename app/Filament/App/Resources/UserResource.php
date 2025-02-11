@@ -20,26 +20,36 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-user-plus';
 
-    protected static ?string $navigationGroup = 'Administração';
-
-    protected static ?string $navigationLabel = 'Meus Usuários';
-
-    protected static ?string $modelLabel = 'Usuário';
-
-    protected static ?string $modelLabelPlural = "Usuários";
-
     protected static ?int $navigationSort = 2;
 
     protected static bool $isScopedToTenant = true;
 
+    public static function getNavigationGroup(): string
+    {
+        return __('Administration');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('My Users');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('User');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Users');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
-
             ->schema([
-
-                Section::make('Dados do usuário')
-                    ->description('Preencha os dados do usuário, a senha de acesso será gerada automaticamente e enviada para o e-mail do seu usuário.')
+                Section::make(__('User Data'))
+                    ->description(__('Fill in the user data, the access password will be automatically generated and sent to your user\'s email.'))
                     ->schema([
                         TextInput::make('name')
                             ->required()
@@ -50,7 +60,7 @@ class UserResource extends Resource
                             ->prefixIcon('fas-envelope')
                             ->unique(User::class, 'email', ignoreRecord: true)
                             ->validationMessages([
-                                'unique' => 'E-mail já cadastrado.',
+                                'unique' => __('Email already registered.'),
                             ])
                             ->required()
                             ->maxLength(255),
@@ -58,7 +68,6 @@ class UserResource extends Resource
                             ->mask('(99) 99999-9999')
                             ->required()
                             ->prefixIcon('fas-phone'),
-
                     ])->columns(3),
             ]);
     }
@@ -68,23 +77,23 @@ class UserResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('avatar_url')
-                    ->label('Avatar')
+                    ->label(__('Avatar'))
                     ->circular()
                     ->getStateUsing(function ($record) {
                         return $record->getFilamentAvatarUrl();
                     })
                     ->alignCenter(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nome')
+                    ->label(__('Name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 TextColumn::make('phone')
-                    ->label('Telefone')
+                    ->label(__('Phone'))
                     ->searchable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Ativo')
+                    ->label(__('Active'))
                     ->sortable()
                     ->alignCenter()
                     ->beforeStateUpdated(function ($record, $state) {
@@ -92,30 +101,29 @@ class UserResource extends Resource
 
                         if ($state === true) {
                             Notification::make()
-                            ->title('Acesso Liberado')
-                            ->body("O Acesso do Usuário {$record->name} foi liberado")
+                            ->title(__('Access Granted'))
+                            ->body(__('User :name access has been granted', ['name' => $record->name]))
                             ->success()
                             ->send();
                         } else {
                             Notification::make()
-                            ->title('Acesso Desativado')
-                            ->body("O Acesso do Usuário {$record->name} foi Desativado")
+                            ->title(__('Access Disabled'))
+                            ->body(__('User :name access has been disabled', ['name' => $record->name]))
                             ->warning()
                             ->send();
                         }
-
                     }),
                 Tables\Columns\IconColumn::make('is_tenant_admin')
-                    ->label('Dono do Tenant')
+                    ->label(__('Tenant Owner'))
                     ->alignCenter()
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Criado em')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Atualizado em')
+                    ->label(__('Updated at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -133,7 +141,6 @@ class UserResource extends Resource
                 ])
                 ->icon('fas-sliders')
                 ->color('warning'),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

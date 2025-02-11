@@ -42,8 +42,7 @@ class AppPanelProvider extends PanelProvider
             ->emailVerification(EmailVerificationPrompt::class)
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label('Meu Perfil')
-                    // ->label( fn() =>Auth::user()->name)
+                    ->label(__('My Profile'))
                     ->url(
                         fn () => User::find(Auth::user()->id)->hasVerifiedEmail()
 
@@ -51,7 +50,6 @@ class AppPanelProvider extends PanelProvider
                         : null
                     )
                     ->icon('heroicon-m-user-circle')
-                    // If you are using tenancy need to check with the visible method where ->company() is the relation between the user and tenancy model as you called
                     ->visible(function (): bool {
                         $user = Auth::user();
 
@@ -61,7 +59,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 MenuItem::make()
-                    ->label('Admin')
+                    ->label(__('Admin'))
                     ->icon('heroicon-o-cog-6-tooth')
                     ->url('/admin')
                     ->visible(fn (): bool => Auth::user()->is_admin),
@@ -75,9 +73,8 @@ class AppPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
-                'Administração',
-                'Suporte',
-
+                __('Administration'),
+                __('Support'),
             ])
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
@@ -107,9 +104,9 @@ class AppPanelProvider extends PanelProvider
             ->plugins([
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')
-                    ->setTitle('Meu Perfil')
-                    ->setNavigationLabel('Meu Perfil')
-                    ->setNavigationGroup('Group Profile')
+                    ->setTitle(__('My Profile'))
+                    ->setNavigationLabel(__('My Profile'))
+                    ->setNavigationGroup(__('Group Profile'))
                     ->setIcon('heroicon-o-user')
                     ->setSort(10)
                     ->shouldRegisterNavigation(false)
@@ -117,7 +114,7 @@ class AppPanelProvider extends PanelProvider
                     ->shouldShowBrowserSessionsForm()
                     ->shouldShowAvatarForm(
                         value: true,
-                        directory: 'avatars', // image will be stored in 'storage/app/public/avatars
+                        directory: 'avatars',
                     )
                     ->customProfileComponents([
                         \App\Livewire\ColorProfileComponent::class,

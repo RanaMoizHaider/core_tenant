@@ -19,20 +19,20 @@ class StatsWebhookOverview extends BaseWidget
         $failureRate = $successCount > 0 ? $failureCount / $successCount : 0;
 
         return [
-            Stat::make('Webhooks com Falha', $failureCount)
-                ->description('Total')
+            Stat::make(__('Failed Webhooks'), $failureCount)
+                ->description(__('Total'))
                 ->descriptionIcon('heroicon-s-bug-ant')
                 ->color('danger')
                 ->chart([7, 3, 4, 5, 6, 3, 5, 8]),
 
-            Stat::make('Webhooks dom Sucesso', $successCount)
-                ->description('Total')
+            Stat::make(__('Successful Webhooks'), $successCount)
+                ->description(__('Total'))
                 ->descriptionIcon('heroicon-s-check-badge')
                 ->color('success')
                 ->chart([7, 3, 4, 5, 6, 3, 5, 3]),
 
-            Stat::make('Média de Falhas', number_format($failureRate, 2) . ' %')
-                ->description('Falhas / Sucesso')
+            Stat::make(__('Failure Rate'), number_format($failureRate, 2) . ' %')
+                ->description(__('Failures / Success'))
                 ->color('warning')
                 ->descriptionIcon('heroicon-s-exclamation-triangle')
                 ->chart([3, 2, 1, 4, 2, 1, 3, 2]),

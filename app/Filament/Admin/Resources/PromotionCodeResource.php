@@ -19,13 +19,25 @@ class PromotionCodeResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-comment-dollar';
 
-    protected static ?string $navigationGroup = 'Planos';
+    public static function getNavigationGroup(): string
+    {
+        return __('Plans');
+    }
 
-    protected static ?string $navigationLabel = 'Código Promocional';
+    public static function getNavigationLabel(): string
+    {
+        return __('Promotion Code');
+    }
 
-    protected static ?string $modelLabel = 'Código';
+    public static function getModelLabel(): string
+    {
+        return __('Code');
+    }
 
-    protected static ?string $modelLabelPlural = "Códigos Promocionais";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Promotion Codes');
+    }
 
     protected static ?int $navigationSort = 3;
 
@@ -35,12 +47,11 @@ class PromotionCodeResource extends Resource
     {
         return $form
             ->schema([
-
                 Fieldset::make('Código Promocional')
                     ->schema([
 
                         TextInput::make('code')
-                             ->label('Código')
+                             ->label(__('Code'))
                              ->required()
                              ->suffixAction(
                                  Action::make('codeGenerator')
@@ -52,93 +63,92 @@ class PromotionCodeResource extends Resource
                              ),
 
                         DateTimePicker::make('expires_at')
-                            ->label('Data de Expiração')
+                            ->label(__('Expiration Date'))
                             ->displayFormat('d/m/Y H:i:s')
                             ->required(),
 
                         DateTimePicker::make('redeem_by')
-                            ->label('Data limite de Resgate')
+                            ->label(__('Redemption Deadline'))
                             ->displayFormat('d/m/Y H:i:s')
                             ->rule('after_or_equal:expires_at')
                             ->validationAttribute('redeem_by')
                             ->validationMessages([
-                                'after_or_equal' => 'Data de resgate inferior a data de expiração do Cupom',
+                                'after_or_equal' => __('Redemption date must be after or equal to expiration date'),
                             ])
                             ->required(),
 
                         TextInput::make('max_redemptions')
-                            ->label('Quantidade de Códigos')
+                            ->label(__('Number of Codes'))
                             ->numeric(),
 
                     ])->columns(4),
 
                 Fieldset::make('Label')
-                ->schema([
+                    ->schema([
 
-                    TextInput::make('percent_off')
-                        ->label('Percentual de Desconto')
-                        ->prefixIcon('fas-percent')
-                        ->numeric()
-                        ->rule('max:100')
-                        ->validationAttribute('percent_off')
-                        ->validationMessages([
-                            'max' => 'O desconto não pode ser maior que 100%',
-                        ])
-                        ->required(),
+                        TextInput::make('percent_off')
+                            ->label(__('Discount Percentage'))
+                            ->prefixIcon('fas-percent')
+                            ->numeric()
+                            ->rule('max:100')
+                            ->validationAttribute('percent_off')
+                            ->validationMessages([
+                                'max' => __('Discount cannot be greater than 100%'),
+                            ])
+                            ->required(),
 
-                    Select::make('duration')
-                        ->label('Duração')
-                        ->options(PromotionDurationEnum::class)
-                        ->reactive()
-                        ->required(),
+                        Select::make('duration')
+                            ->label(__('Duration'))
+                            ->options(PromotionDurationEnum::class)
+                            ->reactive()
+                            ->required(),
 
-                    TextInput::make('duration_in_months')
-                        ->label('Duração em Meses')
-                        ->hidden(fn ($get) => $get('duration') != 'repeating')
-                        ->numeric(),
+                        TextInput::make('duration_in_months')
+                            ->label(__('Duration in Months'))
+                            ->hidden(fn ($get) => $get('duration') != 'repeating')
+                            ->numeric(),
 
-                ])->columns(3),
+                    ])->columns(3),
 
                 Fieldset::make('Label')
-                ->schema([
+                    ->schema([
 
-                    Toggle::make('valid')
-                        ->label('Deseja ativar o Cupom?')
-                        ->default(true)
-                        ->onColor('success')
-                        ->offColor('info')
-                        ->required(),
+                        Toggle::make('valid')
+                            ->label(__('Activate Coupon?'))
+                            ->default(true)
+                            ->onColor('success')
+                            ->offColor('info')
+                            ->required(),
 
-                    Toggle::make('first_time_transaction')
-                        ->label('Valido apenas na Primeira Transação?')
-                        ->default(false)
-                        ->onColor('success')
-                        ->offColor('info')
-                        ->required(),
+                        Toggle::make('first_time_transaction')
+                            ->label(__('Valid only for First Transaction?'))
+                            ->default(false)
+                            ->onColor('success')
+                            ->offColor('info')
+                            ->required(),
 
-                    Toggle::make('customer_optional')
-                        ->label('Cupom valido apenas para um cliente?')
-                        ->onColor('success')
-                        ->offColor('info')
-                        ->reactive()
-                        ->default(false),
+                        Toggle::make('customer_optional')
+                            ->label(__('Coupon valid for a single customer?'))
+                            ->onColor('success')
+                            ->offColor('info')
+                            ->reactive()
+                            ->default(false),
 
-                ])->columns(3),
+                    ])->columns(3),
 
-                Fieldset::make('Cliente')
-                ->hidden(fn ($get) => $get('customer_optional') === false)
-                ->schema([
+                Fieldset::make(__('Customer'))
+                    ->hidden(fn ($get) => $get('customer_optional') === false)
+                    ->schema([
 
-                    Select::make('customer')
-                        ->reactive()
-                        ->requiredUnless('customer_optional', true)
-                        ->label('Selecione o Cliente que receberá o Cupom')
-                        ->options(function () {
-                            return Organization::all()->pluck('name', 'stripe_id');
-                        }),
+                        Select::make('customer')
+                            ->reactive()
+                            ->requiredUnless('customer_optional', true)
+                            ->label(__('Select Customer to Receive the Coupon'))
+                            ->options(function () {
+                                return Organization::all()->pluck('name', 'stripe_id');
+                            }),
 
-                ])->columns(3),
-
+                    ])->columns(3),
             ]);
     }
 

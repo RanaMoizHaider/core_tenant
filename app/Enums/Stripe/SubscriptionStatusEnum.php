@@ -14,19 +14,20 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
     case UNPAID             = 'unpaid';
     case CANCELED           = 'canceled';
     case PAUSED             = 'paused';
+    case EXPIRED            = 'expired';
 
     public function getLabel(): string
-    {
+    {   
         return match ($this) {
-            self::INCOMPLETE         => 'Em Validação',
-            self::TRIALING           => 'Período Teste',
-            self::ACTIVE             => 'Ativa',
-            self::INCOMPLETE_EXPIRED => 'Cancelado',
-            self::PAST_DUE           => 'Aguardando Pagamento',
-            self::UNPAID             => 'Cartão Inválido',
-            self::CANCELED           => 'Cancelado',
-            self::PAUSED             => 'Pausado',
-
+            self::INCOMPLETE         => __('Incomplete'),
+            self::TRIALING           => __('Trialing'),
+            self::ACTIVE             => __('Active'),
+            self::INCOMPLETE_EXPIRED => __('Incomplete Expired'),
+            self::PAST_DUE           => __('Past Due'),
+            self::UNPAID             => __('Unpaid'),
+            self::CANCELED           => __('Canceled'),
+            self::PAUSED             => __('Paused'),
+            self::EXPIRED            => __('Expired'),
         };
     }
 
@@ -41,6 +42,7 @@ enum SubscriptionStatusEnum: string implements HasLabel, HasColor
             self::UNPAID             => 'danger',
             self::CANCELED           => 'danger',
             self::PAUSED             => 'warning',
+            self::EXPIRED            => 'danger',
 
         };
     }

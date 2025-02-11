@@ -15,10 +15,10 @@ enum TicketStatusEnum: string implements HasLabel, HasColor
     {
         return match ($this) {
 
-            self::OPEN       => 'Aberto',
-            self::INPROGRESS => 'Em Progresso',
-            self::RESOLVED   => 'Resolvido',
-            self::CLOSED     => 'Fechado',
+            self::OPEN       => __('Open'),
+            self::INPROGRESS => __('In Progress'),
+            self::RESOLVED   => __('Resolved'),
+            self::CLOSED     => __('Closed'),
         };
     }
 

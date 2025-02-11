@@ -8,33 +8,30 @@ class Backup extends BaseBackups
 {
     protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
 
-    protected static ?string $navigationGroup = 'Administração';
+    public static function getNavigationGroup(): string
+    {
+        return __('Administration');
+    }
 
-    protected static ?string $navigationLabel = 'Sistema';
+    public static function getNavigationLabel(): string
+    {
+        return __('System');
+    }
 
-    protected static ?string $modelLabel = 'Backup';
+    public static function getModelLabel(): string
+    {
+        return __('Backup');
+    }
 
-    protected static ?string $modelLabelPlural = "Backup";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Backup');
+    }
 
     protected static ?int $navigationSort = 2;
 
     public function getHeading(): string
     {
-        return 'Application Backups';
-    }
-
-    public static function getNavigationSort(): ?int
-    {
-        return 2;
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Backup';
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Sistema';
+        return __('Application Backups');
     }
 }

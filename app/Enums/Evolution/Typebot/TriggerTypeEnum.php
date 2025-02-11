@@ -14,10 +14,10 @@ enum TriggerTypeEnum: string implements HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::ALL      => 'Todos',
-            self::NONE     => 'Nenhum',
-            self::ADVANCED => 'Começa com',
-            self::KEYWORD  => 'Palavra Chave',
+            self::ALL      => __('All'),
+            self::NONE     => __('None'),
+            self::ADVANCED => __('Advanced'),
+            self::KEYWORD  => __('Keyword'),
 
         };
     }

@@ -19,13 +19,25 @@ class WebhookEventResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-circle-nodes';
 
-    protected static ?string $navigationGroup = 'Sistema';
+    public static function getNavigationGroup(): string
+    {
+        return __('System');
+    }
 
-    protected static ?string $navigationLabel = 'Webhook';
+    public static function getNavigationLabel(): string
+    {
+        return __('Webhook');
+    }
 
-    protected static ?string $modelLabel = 'Webhooks';
+    public static function getModelLabel(): string
+    {
+        return __('Webhook');
+    }
 
-    protected static ?string $modelLabelPlural = "Webhooks";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Webhooks');
+    }
 
     protected static ?int $navigationSort = 1;
 
@@ -47,22 +59,24 @@ class WebhookEventResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('event_type')
-                    ->label('Tipo do Evento')
+                    ->label(__('Event Type'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->alignCenter()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Recebido em')
+                    ->label(__('Received At'))
                     ->alignCenter()
                     ->dateTime('d/m/Y H:i:s')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('received_at')
+                    ->label(__('Received at'))
                     ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('Updated at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -75,7 +89,7 @@ class WebhookEventResource extends Resource
                 //Tables\Actions\EditAction::make()->slideOver(),
 
                 Action::make('view_payload')
-                    ->label('Ver Payload')
+                    ->label(__('View Payload'))
                     ->icon('heroicon-o-eye')
                     ->color('primary')
                         ->action(function ($record) {

@@ -21,74 +21,83 @@ class CouponResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-ticket';
 
-    protected static ?string $navigationGroup = 'Planos';
+    public static function getNavigationGroup(): string
+    {
+        return __('Plans');
+    }
 
-    protected static ?string $navigationLabel = 'Cupom de Desconto';
+    public static function getNavigationLabel(): string
+    {
+        return __('Discount Coupon');
+    }
 
-    protected static ?string $modelLabel = 'Cupom';
+    public static function getModelLabel(): string
+    {
+        return __('Coupon');
+    }
 
-    protected static ?string $modelLabelPlural = "Cupons";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Coupons');
+    }
 
     protected static ?int $navigationSort = 2;
 
     protected static bool $isScopedToTenant = false;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
-                Fieldset::make('Código Promocional')
+                Fieldset::make(__('Promotional Code'))
                 ->schema([
-
                     TextInput::make('coupon_code')
-                        ->label('Código')
+                        ->label(__('Code'))
                         ->maxLength(255)
                         ->readOnly(),
 
                     TextInput::make('name')
-                        ->label('Nome para o cupom')
+                        ->label(__('Coupon Name'))
                         ->maxLength(20),
 
                     Select::make('currency')
-                        ->label('Moeda')
+                        ->label(__('Currency'))
                         ->options(ProductCurrencyEnum::class)
                         ->reactive()
                         ->required(),
 
                     TextInput::make('percent_off')
-                        ->label('Percentual de Desconto')
+                        ->label(__('Discount Percentage'))
                         ->prefixIcon('fas-percent')
                         ->numeric()
                         ->rule('max:100')
                         ->validationAttribute('percent_off')
                         ->validationMessages([
-                            'max' => 'O desconto não pode ser maior que 100%',
+                            'max' => __('Discount cannot be greater than 100%'),
                         ])
                         ->required(),
 
                     TextInput::make('max_redemptions')
-                        ->label('Quantidade de Cupons')
+                        ->label(__('Number of Coupons'))
                         ->numeric(),
-
                 ])->columns(5),
 
-                Fieldset::make('Código Promocional')
+                Fieldset::make(__('Promotional Code'))
                 ->schema([
                     DateTimePicker::make('redeem_by')
-                        ->label('Data de Expiração')
+                        ->label(__('Expiration Date'))
                         ->displayFormat('d/m/Y H:i:s'),
 
                     Select::make('duration')
-                        ->label('Duração')
+                        ->label(__('Duration'))
                         ->options(PromotionDurationEnum::class)
                         ->reactive()
                         ->required(),
 
                     TextInput::make('duration_in_months')
-                        ->label('Duração em Meses')
+                        ->label(__('Duration in Months'))
                         ->hidden(fn ($get) => $get('duration') != 'repeating')
                         ->numeric(),
-
                 ])->columns(3),
             ]);
     }
@@ -98,31 +107,31 @@ class CouponResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('coupon_code')
-                    ->label('Código Cupom')
+                    ->label(__('Coupon Code'))
                     ->alignCenter()
                     ->searchable(),
 
                 TextColumn::make('name')
-                    ->label('Nome para o cupom')
+                    ->label(__('Coupon Name'))
                     ->searchable(),
 
                 TextColumn::make('duration')
-                    ->label('Duração')
+                    ->label(__('Duration'))
                     ->searchable(),
 
                 TextColumn::make('duration_in_months')
-                    ->label('Duração em Meses')
+                    ->label(__('Duration in Months'))
                     ->alignCenter()
                     ->numeric()
                     ->sortable(),
 
                 TextColumn::make('percent_off')
-                    ->label('Percentual de Desconto')
+                    ->label(__('Discount Percentage'))
                     ->alignCenter()
                     ->searchable(),
 
                 TextColumn::make('max_redemptions')
-                    ->label('Quantidade de Cupons')
+                    ->label(__('Number of Coupons'))
                     ->alignCenter()
                     ->numeric()
                     ->sortable(),
@@ -148,25 +157,20 @@ class CouponResource extends Resource
                         ->color('secondary'),
                     DeleteAction::make()
                     ->before(function ($record, $action) {
-                        // Chamando o serviço de deleção antes de remover o registro do banco
                         $deleteCouponService = new DeleteStripeCouponService();
 
                         try {
                             $deleteCouponService->deleteCouponCode($record->coupon_code);
-
                         } catch (\Exception $e) {
-                            $action->notify('danger', 'Erro ao deletar o cupom no Stripe: ' . $e->getMessage());
-
-                            throw new \Exception('Falha na API do Stripe: ' . $e->getMessage());
+                            $action->notify('danger', __('Error deleting coupon in Stripe: ') . $e->getMessage());
+                            throw new \Exception(__('Stripe API Failure: ') . $e->getMessage());
                         }
                     }),
                 ])
                 ->icon('fas-sliders')
                 ->color('warning'),
-
             ])
             ->bulkActions([
-
             ]);
     }
 

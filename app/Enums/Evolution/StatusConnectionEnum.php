@@ -14,10 +14,10 @@ enum StatusConnectionEnum: string implements HasLabel, HasColor
     public function getLabel(): string
     {
         return match ($this) {
-            self::OPEN       => 'Conectado',
-            self::CONNECTING => 'Conectando',
-            self::CLOSE      => 'Desconectado',
-            self::REFUSED    => 'Recusado',
+            self::OPEN       => __('Connected'),
+            self::CONNECTING => __('Connecting'),
+            self::CLOSE      => __('Disconnected'),
+            self::REFUSED    => __('Refused'),
         };
     }
     public function getColor(): string|array|null

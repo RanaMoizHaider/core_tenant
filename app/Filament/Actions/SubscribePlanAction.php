@@ -37,19 +37,19 @@ class SubscribePlanAction extends Action
 
         $this->form([
             RadioGroup::make('billing_period')
-                ->label(__('Selecione o seu plano'))
+                ->label(__('Select your plan'))
                 ->options($this->getBilledPeriods())
                 ->default(array_key_first($this->getBilledPeriods()))
                 ->columnSpanFull()
                 ->badges([
-                    'year' => __('Melhor Valor'),
+                    'year' => __('Best Value'),
                 ])
                 ->required(),
         ]);
 
         $this->registerModalActions([
             Action::make('checkout')
-                ->label(__('Assinar Agora!'))
+                ->label(__('Subscribe Now!'))
                 ->size('xl')
                 ->extraAttributes(['class' => 'w-full'])
                 ->action(function (Action $action) {
@@ -124,7 +124,7 @@ class SubscribePlanAction extends Action
         $organization = tenant(Organization::class);
 
         if (!$organization->stripe_id) {
-            throw new \Exception('A organização não possui um ID do Stripe associado.');
+            throw new \Exception(__('The organization does not have an associated Stripe ID.'));
         }
 
         // Configura a API Key da Stripe
