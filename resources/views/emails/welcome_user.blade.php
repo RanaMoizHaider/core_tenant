@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olá, Seja Bem Vindo</title>
+    <title>Welcome - {{ $organizationName }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,11 +61,11 @@
         }
         .button-container {
             text-align: center;
-            margin-top: 20px; /* Adiciona um pequeno espaço acima do botão */
+            margin-top: 20px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #4CAF50; /* Cor do fundo */
+            background-color: #4CAF50;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -86,29 +86,29 @@
 
     <div class="container">
         <div class="header">
-            <h1>Bem-vindo à - {{ $organizationName }}</h1>
+            <h1>Welcome to {{ $organizationName }}</h1>
         </div>
 
         <div class="content">
-            <h2>Olá {{ $name }},</h2>
-            <p>Estamos felizes em tê-lo conosco! Sua conta foi criada com sucesso no nosso sistema.</p>
-            <p>Para acessar o sistema, basta usar a seguinte senha:</p>
+            <h2>Hello {{ $name }},</h2>
+            <p>We're happy to have you with us! Your account has been successfully created in our system.</p>
+            <p>To access the system, please use the following password:</p>
 
             <div class="password">
                 {{ $password }}
             </div>
 
-            <p>Recomendamos que você altere sua senha após o primeiro login para garantir mais segurança.</p>
+            <p>We recommend changing your password after your first login for enhanced security.</p>
 
-            <p>Se precisar de ajuda, nossa equipe está à disposição para assisti-lo. Aproveite a experiência!</p>
+            <p>If you need help, our team is available to assist you. Enjoy the experience!</p>
 
             <div class="button-container">
-                <a href="{{ env('APP_URL') }}" class="button">Acessar o Sistema</a>
+                <a href="{{ env('APP_URL') }}" class="button">Access the System</a>
             </div>
             <br>
         </div>
         <div class="footer">
-            <p>Atenciosamente, Equipe - {{ $organizationName }}</p>
+            <p>Best regards, {{ $organizationName }} Team</p>
         </div>
     </div>
 

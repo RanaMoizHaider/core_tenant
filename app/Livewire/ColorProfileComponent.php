@@ -34,13 +34,13 @@ class ColorProfileComponent extends Component implements HasForms
     {
         return $form
             ->schema([
-                Section::make('Cor do Tema')
+                Section::make(__('Theme Color'))
                     ->aside()
-                    ->description('Escolha a cor do tema')
+                    ->description(__('Choose the theme color'))
                     ->schema([
 
                         ColorPicker::make('settings.color')
-                            ->label('Cor do tema')
+                            ->label(__('Theme color'))
                             ->columnSpanFull()
                             ->inLineLabel()
                             ->default('#f59e0b'),

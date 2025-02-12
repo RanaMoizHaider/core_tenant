@@ -30,18 +30,18 @@ class CreateUser extends CreateRecord
     {
         $user = $this->record;
 
-        // Busca a organização à qual o usuário está associado
+        // Find the organization associated with the user
         $organization = Organization::whereHas('members', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->first();
 
-        // Se a organização for encontrada, envia o e-mail
+        // If organization is found, send the email
         if ($organization) {
-            // Envia o e-mail com o nome da organização
+            // Send welcome email with organization name
             Mail::to($user->email)->queue(new WelcomeUserMail($user->name, $this->plainPassword, $organization->name));
         }
     }
-    //Função para gerar Senha Aleatória
+    // Function to generate random password
     protected function generateRandomPassword($length = 10)
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?';
@@ -49,7 +49,7 @@ class CreateUser extends CreateRecord
         return substr(str_shuffle($characters), 0, $length);
     }
 
-    //retornar para a lista de usuários
+    // Return to users list
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

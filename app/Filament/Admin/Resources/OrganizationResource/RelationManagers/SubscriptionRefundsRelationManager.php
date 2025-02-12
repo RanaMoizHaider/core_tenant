@@ -12,11 +12,20 @@ class SubscriptionRefundsRelationManager extends RelationManager
 {
     protected static string $relationship = 'subscription_refunds';
 
-    protected static ?string $modelLabel = 'Reembolsos';
+    public static function getModelLabel(): string
+    {
+        return __('Refund');
+    }
 
-    protected static ?string $modelLabelPlural = "Reembolsos";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Refunds');
+    }
 
-    protected static ?string $title = 'Reembolsos da Subscription';
+    public static function title(): string
+    {
+        return __('Subscription Refunds');
+    }
 
     public function form(Form $form): Form
     {
@@ -31,37 +40,37 @@ class SubscriptionRefundsRelationManager extends RelationManager
             ->columns([
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->alignCenter()
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('amount')
-                    ->label('Valor')
+                    ->label(__('Value'))
                     ->sortable()
                     ->searchable()
                     ->alignCenter()
                     ->formatStateUsing(fn ($state) => 'R$ ' . number_format($state / 100, 2, ',', '.')),
 
                 TextColumn::make('reason')
-                    ->label('Motivo')
+                    ->label(__('Reason'))
                     ->alignCenter()
                     ->badge()
                     ->searchable(),
 
                 TextColumn::make('failure_reason')
-                    ->label('Motivo')
+                    ->label(__('Reason'))
                     ->visible(fn ($record) => $record && $record->failure_reason !== null)
                     ->searchable(),
 
                 TextColumn::make('reference')
-                    ->label('Referência')
+                    ->label(__('Reference'))
                     ->alignCenter()
                     ->searchable(),
 
                 TextColumn::make('created_at')
-                    ->label('Criado em')
+                    ->label(__('Created at'))
                     ->dateTime('d/m/Y H:m:s')
                     ->alignCenter()
                     ->searchable(),

@@ -15,7 +15,7 @@ class StatsWebhookOverview extends BaseWidget
         $successCount = WebhookEvent::where('status', 'success')->count();
         $failureCount = WebhookEvent::where('status', 'failed')->count();
 
-        // Calcula a média de falhas sobre os sucessos, evitando divisão por zero
+        // Calculate the failure rate over successes, avoiding division by zero
         $failureRate = $successCount > 0 ? $failureCount / $successCount : 0;
 
         return [

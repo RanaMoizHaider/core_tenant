@@ -15,44 +15,53 @@ class InstanceTypebotsRelationManager extends RelationManager
 {
     protected static string $relationship = 'InstanceTypebots';
 
-    protected static ?string $modelLabel = 'Robô TypeBot';
+    public static function getModelLabel(): string
+    {
+        return __('TypeBot Robot');
+    }
 
-    protected static ?string $modelLabelPlural = "TypeBots";
+    public static function getPluralModelLabel(): string
+    {
+        return __('TypeBots');
+    }
 
-    protected static ?string $title = 'Robôs TypeBot';
+    public static function title(): string
+    {
+        return __('TypeBot Robots');
+    }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Dados Basicos do typebot')
+                Section::make(__('Basic TypeBot Data'))
                     ->schema([
 
                         TextInput::make('name')
-                            ->label('Descrição do Robô')
+                            ->label(__('Robot Description'))
                             ->prefixIcon('fas-id-card')
                             ->required()
                             ->maxLength(255),
 
                         TextInput::make('url')
-                            ->label('URL do typebot')
+                            ->label(__('TypeBot URL'))
                             ->prefix('https://')
                             ->required()
                             ->maxLength(255),
 
                         TextInput::make('type_bot')
                             ->prefixIcon('fas-robot')
-                            ->label('Typebot')
+                            ->label(__('TypeBot'))
                             ->required()
                             ->maxLength(255),
 
                     ])->columns(3),
 
-                Section::make('Dados de Disparo')
+                Section::make(__('Trigger Data'))
                     ->schema([
 
                         Select::make('trigger_type')
-                            ->label('Tipo de Gatilho')
+                            ->label(__('Trigger Type'))
                             ->required()
                             ->reactive()
                             ->live()
@@ -62,12 +71,12 @@ class InstanceTypebotsRelationManager extends RelationManager
                             ->hidden(fn ($get) => $get('trigger_type') != 'keyword')
                             ->required()
                             ->reactive()
-                            ->label('Operador de Gatilho')
+                            ->label(__('Trigger Operator'))
                             ->options(TriggerOperatorEnum::class),
 
                         TextInput::make('trigger_value')
                             ->hidden(fn ($get) => !in_array($get('trigger_type'), ['advanced', 'keyword']))
-                            ->label('Valor do Gatilho')
+                            ->label(__('Trigger Value'))
                             ->prefixIcon('fas-keyboard')
                             ->reactive()
                             ->required()
@@ -75,58 +84,58 @@ class InstanceTypebotsRelationManager extends RelationManager
 
                     ])->columns(3),
 
-                Section::make('Configurações Gerais')
+                Section::make(__('General Settings'))
                 ->schema([
 
                     TextInput::make('expire')
-                        ->label('Expirar em minutos')
+                        ->label(__('Expire in minutes'))
                         ->prefixIcon('fas-clock')
                         ->numeric()
                         ->required(),
 
                     TextInput::make('keyword_finish')
-                        ->label('Palavra-chave de Finalização')
+                        ->label(__('Finish Keyword'))
                         ->prefixIcon('fas-arrow-right-from-bracket')
                         ->required()
                         ->maxLength(255),
 
                     TextInput::make('delay_message')
-                        ->label('Atraso Padrão (Milisegundos)')
+                        ->label(__('Default Delay (Milliseconds)'))
                         ->prefixIcon('fas-clock')
                         ->required()
                         ->numeric(),
 
                     TextInput::make('unknown_message')
-                        ->label('Mensagem Desconhecida')
+                        ->label(__('Unknown Message'))
                         ->prefixIcon('fas-question')
                         ->required()
                         ->maxLength(30),
 
                     TextInput::make('debounce_time')
-                        ->label('Tempo de Debounce')
+                        ->label(__('Debounce Time'))
                         ->prefixIcon('fas-clock')
                         ->required()
                         ->numeric(),
 
                 ])->columns(3),
 
-                Section::make('Opções Gerais')
+                Section::make(__('General Options'))
                 ->schema([
 
                     ToggleButtons::make('listening_from_me')
-                        ->label('Ouvindo de mim')
+                        ->label(__('Listening from me'))
                         ->inline()
                         ->boolean()
                         ->required(),
 
                     ToggleButtons::make('stop_bot_from_me')
-                        ->label('Parar bot por mim')
+                        ->label(__('Stop bot from me'))
                         ->inline()
                         ->boolean()
                         ->required(),
 
                     ToggleButtons::make('keep_open')
-                        ->label('Manter aberto')
+                        ->label(__('Keep open'))
                         ->inline()
                         ->boolean()
                         ->required(),
@@ -142,19 +151,19 @@ class InstanceTypebotsRelationManager extends RelationManager
             ->columns([
 
                 TextColumn::make('name')
-                    ->label('Descrição do'),
+                    ->label(__('Description')),
 
                 TextColumn::make('url')
-                    ->label('URL'),
+                    ->label(__('URL')),
 
                 TextColumn::make('type_bot')
-                    ->label('Codigo do Typebot'),
+                    ->label(__('TypeBot Code')),
 
                 TextColumn::make('id_typebot')
-                    ->label('Id do Bot'),
+                    ->label(__('Bot ID')),
 
                 ToggleColumn::make('is_active')
-                    ->label('Ativo')
+                    ->label(__('Active'))
                     ->alignCenter(),
 
             ])

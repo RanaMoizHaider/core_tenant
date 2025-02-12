@@ -15,7 +15,7 @@ class CreateWhatsappInstance extends CreateRecord
         $service = new CreateEvolutionInstanceService();
         $result  = $service->createInstance($data);
 
-        // Inclui os dados retornados no array de dados do formulário
+        // Include the returned data in the form data array
         return array_merge($data, $result);
     }
 

@@ -13,35 +13,41 @@ class ProductfeaturesRelationManager extends RelationManager
 {
     protected static string $relationship = 'product_features';
 
-    protected static ?string $modelLabel = 'Caracteristica do Plano';
+    public static function getModelLabel(): string
+    {
+        return __('Plan Feature');
+    }
 
-    protected static ?string $modelLabelPlural = "Caracteristicas do Plano";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Plan Features');
+    }
 
-    protected static ?string $title = 'Caracteristicas do Plano';
+    public static function title(): string
+    {
+        return __('Plan Features');
+    }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-
-                Fieldset::make('Característica')
+                Fieldset::make(__('Feature'))
                 ->schema([
                     TextInput::make('name')
-                    ->label('Nome da Característica')
+                    ->label(__('Feature Name'))
                     ->required()
                     ->maxLength(255),
                 ])->columns(1),
 
-                Fieldset::make('Descrição da Característica')
+                Fieldset::make(__('Feature Description'))
                 ->schema([
                     Textarea::make('description')
-                    ->label('Descrição da Característica')
+                    ->label(__('Feature Description'))
                     ->required()
                     ->maxLength(255),
                 ])->columns(1),
-
             ]);
-
     }
 
     public function table(Table $table): Table
@@ -50,14 +56,14 @@ class ProductfeaturesRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nome da Característica')
+                    ->label(__('Feature Name'))
                     ->searchable(),
 
                 TextColumn::make('description')
-                    ->label('Descrição da Característica'),
+                    ->label(__('Feature Description')),
 
                 ToggleColumn::make('is_active')
-                    ->label('Ativo para cliente')
+                    ->label(__('Active for Customer'))
                     ->alignCenter(),
             ])
             ->filters([

@@ -13,30 +13,39 @@ class TicketResponsesRelationManager extends RelationManager
 {
     protected static string $relationship = 'ticketresponses';
 
-    protected static ?string $modelLabel = 'Tratativa';
+    public static function getModelLabel(): string
+    {
+        return __('Response');
+    }
 
-    protected static ?string $modelLabelPlural = "Tratativas";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Responses');
+    }
 
-    protected static ?string $title = 'Tratativa do Ticket';
+    public static function title(): string
+    {
+        return __('Ticket Response');
+    }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Fieldset::make('Tratativa do Ticket')
-                ->schema([
-                    Textarea::make('message')
-                        ->label('Resposta')
-                        ->required()
-                        ->columnSpanFull(),
-                ])->columns(1),
+                Fieldset::make(__('Ticket Response'))
+                    ->schema([
+                        Textarea::make('message')
+                            ->label(__('Response'))
+                            ->required()
+                            ->columnSpanFull(),
+                    ])->columns(1),
 
-                Fieldset::make('Anexos')
-                ->schema([
-                    FileUpload::make('file')
-                        ->multiple()
-                        ->label('Arquivos'),
-                ])->columns(1),
+                Fieldset::make(__('Attachments'))
+                    ->schema([
+                        FileUpload::make('file')
+                            ->multiple()
+                            ->label(__('Files')),
+                    ])->columns(1),
             ]);
     }
 
@@ -46,17 +55,17 @@ class TicketResponsesRelationManager extends RelationManager
 
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Responsável'),
+                    ->label(__('Responsible')),
 
                 TextColumn::make('message')
-                    ->label('Tratativa'),
+                    ->label(__('Response')),
 
                 TextColumn::make('created_at')
-                    ->label('Criado em')
+                    ->label(__('Created at'))
                     ->dateTime('d/m/Y H:m:s'),
 
                 TextColumn::make('updated_at')
-                    ->label('Atualizado em')
+                    ->label(__('Updated at'))
                     ->dateTime('d/m/Y H:m:s'),
             ])
             ->filters([
@@ -67,10 +76,8 @@ class TicketResponsesRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-
             ])
             ->bulkActions([
-
             ]);
     }
 }

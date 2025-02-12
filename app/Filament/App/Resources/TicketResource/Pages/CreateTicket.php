@@ -22,18 +22,18 @@ class CreateTicket extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $ticket = $this->record; // Recupera o ticket recém-criado ou atualizado
+        $ticket = $this->record; // Retrieves the newly created ticket
 
         Notification::make()
-            ->title('Chamado Registrado com Sucesso')
-            ->body("Seu Chamado de N. {$ticket->id} foi registrado com sucesso. Em breve será respondido pela equipe.")
+            ->title(__('Ticket Successfully Registered'))
+            ->body(__('Your Ticket No. :id has been successfully registered. Our team will respond shortly.', ['id' => $ticket->id]))
             ->success()
             ->actions([
-                Action::make('Visualizar')
+                Action::make(__('View'))
                     ->url(TicketResource::getUrl('view', ['record' => $ticket->id])),
 
             ])
-            ->sendToDatabase(Auth::user()); // Envia para o usuário relacionado ao ticket
+            ->sendToDatabase(Auth::user()); // Sends to the ticket's related user
 
     }
 

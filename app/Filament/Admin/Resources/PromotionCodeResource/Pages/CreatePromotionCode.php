@@ -21,7 +21,7 @@ class CreatePromotionCode extends CreateRecord
 
         } catch (\Exception $e) {
 
-            throw new \Exception('Erro ao criar código promocional: ' . $e->getMessage());
+            throw new \Exception(__('Failed to create promotion code: ') . $e->getMessage());
         }
     }
 }

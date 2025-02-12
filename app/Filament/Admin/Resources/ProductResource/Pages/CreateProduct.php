@@ -21,7 +21,7 @@ class CreateProduct extends CreateRecord
 
             return $data;
         } catch (\Exception $e) {
-            throw new \Exception('Erro ao salvar produto: ' . $e->getMessage());
+            throw new \Exception(__('Failed to save product: ') . $e->getMessage());
         }
     }
 }

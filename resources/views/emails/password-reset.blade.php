@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senha Redefinida - {{ config('app.name') }}</title>
+    <title>Password Reset - {{ config('app.name') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,11 +57,11 @@
 
         .button-container {
             text-align: center;
-            margin-top: 20px; /* Adiciona um pequeno espaço acima do botão */
+            margin-top: 20px;
         }
         .button {
             padding: 10px 20px;
-            background-color: #4CAF50; /* Cor do fundo */
+            background-color: #4CAF50;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -82,22 +82,22 @@
 <body>
 
     <div class="email-container">
-        <h1>Olá, {{ $name }}!</h1>
+        <h1>Hello, {{ $name }}!</h1>
 
-        <p>Sua senha foi redefinida com sucesso. Aqui está a sua nova senha:</p>
+        <p>Your password has been successfully reset. Here's your new password:</p>
 
         <div class="password">
             {{ $password }}
         </div>
 
-        <p>Recomendamos que você altere sua senha após o login.</p>
+        <p>We recommend changing your password after logging in.</p>
 
         <div class="button-container">
-            <a href="{{ env('APP_URL') }}" class="button">Acessar o Sistema</a>
+            <a href="{{ env('APP_URL') }}" class="button">Access the System</a>
         </div>
         <br>
         <div class="footer">
-          <p>Atenciosamente, Equipe {{ config('app.name') }}</p>
+          <p>Best regards, {{ config('app.name') }} Team</p>
         </div>
     </div>
 

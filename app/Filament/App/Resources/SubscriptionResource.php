@@ -125,10 +125,10 @@ class SubscriptionResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    Action::make('Cancelar Assinatura')
+                    Action::make(__('Cancel Subscription'))
                         ->form([
 
-                            Fieldset::make('Motivo do Cancelamento')
+                            Fieldset::make(__('Cancellation Reason'))
                                 ->schema([
                                     Select::make('reason')
                                         ->label(__('Select Reason'))
@@ -136,7 +136,7 @@ class SubscriptionResource extends Resource
                                         ->required(),
                                 ])->columns(1),
 
-                            Fieldset::make('Suas Impressões')
+                            Fieldset::make(__('Your Feedback'))
                                 ->schema([
                                     Textarea::make('coments')
                                         ->label(__('Comments or Feedback'))
@@ -144,7 +144,7 @@ class SubscriptionResource extends Resource
                                         ->columnSpan('full'),
                                 ])->columns(1),
 
-                            Fieldset::make('Sua Nota')
+                            Fieldset::make(__('Your Rating'))
                                 ->schema([
                                     RatingStar::make('rating')
                                         ->label(__('Rating'))

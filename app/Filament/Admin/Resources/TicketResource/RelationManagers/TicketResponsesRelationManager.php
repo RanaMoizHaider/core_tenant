@@ -13,30 +13,39 @@ class TicketResponsesRelationManager extends RelationManager
 {
     protected static string $relationship = 'ticketresponses';
 
-    protected static ?string $modelLabel = 'Tratativa';
+    public static function getModelLabel(): string
+    {
+        return __('Treatment');
+    }
 
-    protected static ?string $modelLabelPlural = "Tratativas";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Treatments');
+    }
 
-    protected static ?string $title = 'Tratativa do Ticket';
+    public static function title(): string
+    {
+        return __('Ticket Treatment');
+    }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
 
-                Fieldset::make('Tratativa do Ticket')
+                Fieldset::make(__('Ticket Treatment'))
                 ->schema([
                     Textarea::make('message')
-                        ->label('Tratativa')
+                        ->label(__('Treatment'))
                         ->required()
                         ->columnSpanFull(),
                 ])->columns(1),
 
-                Fieldset::make('Anexos')
+                Fieldset::make(__('Attachments'))
                 ->schema([
                     FileUpload::make('file')
                         ->multiple()
-                        ->label('Arquivos'),
+                        ->label(__('Files')),
                 ])->columns(1),
 
             ]);
@@ -48,17 +57,17 @@ class TicketResponsesRelationManager extends RelationManager
 
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Responsável'),
+                    ->label(__('Responsible')),
 
                 TextColumn::make('message')
-                    ->label('Tratativa'),
+                    ->label(__('Treatment')),
 
                 TextColumn::make('created_at')
-                    ->label('Criado em')
+                    ->label(__('Created at'))
                     ->dateTime('d/m/Y H:m:s'),
 
                 TextColumn::make('updated_at')
-                    ->label('Atualizado em')
+                    ->label(__('Updated at'))
                     ->dateTime('d/m/Y H:m:s'),
             ])
             ->filters([

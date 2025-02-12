@@ -22,24 +22,24 @@ class EditTicket extends EditRecord
     }
     protected function afterSave(): void
     {
-        $ticket = $this->record->fresh(); // Recarrega o ticket atualizado do banco de dados
+        $ticket = $this->record->fresh(); // Reload the updated ticket from database
 
-        $status = strtolower(trim($ticket->status->value)); // Normaliza o valor do enum
+        $status = strtolower(trim($ticket->status->value)); // Normalize the enum value
 
         if (in_array($status, ['resolved', 'closed'])) {
-            $ticket->update(['closed_at' => now()]); // Atualiza diretamente o campo 'closed_at' no banco de dados
+            $ticket->update(['closed_at' => now()]); // Update the 'closed_at' field directly in the database
         }
 
-        // Buscar a instância do usuário relacionado ao ticket
+        // Get the user instance related to the ticket
         $user = $ticket->user;
 
-        if ($user) { // Certifique-se de que o usuário existe
+        if ($user) { // Make sure the user exists
             Notification::make()
-            ->title('Chamado Atualizado')
-            ->body("Seu Chamado de N. {$ticket->id} foi atualizado. Confira as atualizações.")
+            ->title(__('Ticket Updated'))
+            ->body(__('Your Ticket No. :id has been updated. Please check the updates.', ['id' => $ticket->id]))
             ->success()
             ->actions([
-                Action::make('Visualizar')
+                Action::make(__('View'))
                     ->url(TicketResource::getUrl('view', ['record' => $ticket->id]))
                     ->button(),
             ])

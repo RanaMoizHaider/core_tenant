@@ -19,11 +19,20 @@ class SubscriptionRelationManager extends RelationManager
 {
     protected static string $relationship = 'subscriptions';
 
-    protected static ?string $modelLabel = 'Assinatura';
+    public static function getModelLabel(): string
+    {
+        return __('Subscription');
+    }
 
-    protected static ?string $modelLabelPlural = "Assinaturas";
+    public static function getPluralModelLabel(): string
+    {
+        return __('Subscriptions');
+    }
 
-    protected static ?string $title = 'Subscrições do Tenant';
+    public static function title(): string
+    {
+        return __('Tenant Subscriptions');
+    }
 
     public function table(Table $table): Table
     {
@@ -32,7 +41,7 @@ class SubscriptionRelationManager extends RelationManager
             ->columns([
 
                 TextColumn::make('stripe_status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->formatStateUsing(fn ($state) => SubscriptionStatusEnum::from($state)->getLabel())
                     ->color(fn ($state) => SubscriptionStatusEnum::from($state)->getColor())
@@ -41,10 +50,10 @@ class SubscriptionRelationManager extends RelationManager
                     ->searchable(),
 
                 TextColumn::make('stripe_id')
-                    ->label('Id Subscription'),
+                    ->label(__('Subscription ID')),
 
                 TextColumn::make('stripe_period')
-                    ->label('Tipo do Plano')
+                    ->label(__('Plan Type'))
                     ->getStateUsing(function ($record) {
                         // Acessa o preço relacionado via o relacionamento definido
                         return $record->price->interval;
@@ -53,7 +62,7 @@ class SubscriptionRelationManager extends RelationManager
                     ->sortable(),
 
                 TextColumn::make('stripe_price')
-                    ->label('Valor do Plano')
+                    ->label(__('Plan Value'))
                     ->getStateUsing(function ($record) {
                         // Acessa o preço relacionado via o relacionamento definido
                         return $record->price->unit_amount;
@@ -63,31 +72,31 @@ class SubscriptionRelationManager extends RelationManager
                     ->sortable(),
 
                 TextColumn::make('ends_at')
-                    ->label('Expira em')
+                    ->label(__('Expires at'))
                     ->alignCenter()
                     ->dateTime('d/m/Y H:m:s'),
 
                 TextColumn::make('remaining_time')
-                    ->label('Tempo Restante')
+                    ->label(__('Remaining Time'))
                     ->getStateUsing(function ($record) {
                         $endsAt = $record->ends_at ? Carbon::parse($record->ends_at) : null;
 
                         if (!$endsAt) {
-                            return 'Sem data definida';
+                            return __('No date defined');
                         }
 
                         $now = now();
 
                         // Verifica se o plano já expirou
                         if ($now > $endsAt) {
-                            return 'Expirado';
+                            return __('Expired');
                         }
 
                         // Calcula a diferença total em dias e horas
                         $remainingDays  = $now->diffInDays($endsAt, false);
                         $remainingHours = $now->diffInHours($endsAt) % 24;
 
-                        return sprintf('%d dias e %02d horas', $remainingDays, $remainingHours);
+                        return sprintf(__('%d days and %02d hours'), $remainingDays, $remainingHours);
                     })
                     ->alignCenter(),
 
@@ -98,7 +107,7 @@ class SubscriptionRelationManager extends RelationManager
             ->headerActions([])
             ->actions([
                 ActionGroup::make([
-                    Action::make('Cancelar Assinatura')
+                    Action::make('Cancel Subscription')
                         ->requiresConfirmation()
                         ->action(function (Action $action, $record, array $data) {
                             $cancellationService = new CancelSubscriptionService();
@@ -107,34 +116,34 @@ class SubscriptionRelationManager extends RelationManager
                         ->color('danger')
                         ->icon('heroicon-o-key'),
 
-                    Action::make('Gerar Reembolso')
+                    Action::make('generateRefund')
                         ->requiresConfirmation()
                         ->form([
 
-                            Fieldset::make('Dados do Plano')
+                            Fieldset::make(__('Plan Data'))
                                 ->schema([
                                     TextInput::make('stripe_period')
-                                        ->label('Tipo do Plano')
+                                        ->label(__('Plan Type'))
                                         ->readOnly()
                                         ->default(function ($record) {
                                             return $record->price->interval;
                                         }),
 
                                     TextInput::make('stripe_price')
-                                        ->label('Valor do Plano')
+                                        ->label(__('Plan Value'))
                                         ->readOnly()
                                         ->default(function ($record) {
                                             $price = $record->price ? $record->price->unit_amount : 0;
 
-                                            return 'R$ ' . number_format($price, 2, ',', '.');  // Exemplo: R$ 599,99
+                                            return 'R$ ' . number_format($price, 2, ',', '.');  // Example: R$ 599,99
                                         }),
                                 ])->columns(2),
 
-                            Fieldset::make('Valores')
+                            Fieldset::make(__('Values'))
                                 ->schema([
 
                                     Money::make('amount')
-                                        ->label('Devolver')
+                                        ->label(__('Refund'))
                                         ->default('100,00')
                                         ->required()
                                         ->rule(function ($get) {
@@ -145,28 +154,28 @@ class SubscriptionRelationManager extends RelationManager
                                         })
                                         ->validationAttribute('amount')
                                         ->validationMessages([
-                                            'lte' => 'O valor não pode ser maior que o valor do plano.',
+                                            'lte' => __('The value cannot be greater than the plan value.'),
                                         ]),
 
                                     Select::make('currency')
-                                        ->label('Moeda')
+                                        ->label(__('Currency'))
                                         ->options(ProductCurrencyEnum::class)
                                         ->required(),
 
                                 ])->columns(2),
 
-                            Fieldset::make('Motivo do Cancelamento')
+                            Fieldset::make(__('Cancellation Reason'))
                                 ->schema([
                                     Select::make('reason')
-                                        ->label('Selecione o Motivo')
+                                        ->label(__('Select Reason'))
                                         ->options(RefundSubscriptionEnum::class)
                                         ->required(),
                                 ])->columns(1),
 
-                            Fieldset::make('Id Pagamento')
+                            Fieldset::make(__('Payment ID'))
                                 ->schema([
                                     TextInput::make('payment_intent')
-                                        ->label('Id Pagamento')
+                                        ->label(__('Payment ID'))
                                         ->readOnly()
                                         ->default(function ($record) {
                                             return $record->payment_intent;
@@ -175,7 +184,7 @@ class SubscriptionRelationManager extends RelationManager
                         ])
 
                         ->requiresConfirmation()
-                        ->modalHeading('Gerar Reembolso')
+                        ->modalHeading(__('Generate Refund'))
                         ->modalDescription()
                         ->slideOver()
                         ->color('warning')
@@ -187,25 +196,25 @@ class SubscriptionRelationManager extends RelationManager
                                 //$refundService->processRefund($record->id, $data);
 
                                 Notification::make()
-                                    ->title('Reembolso Gerado')
-                                    ->body('Reembolso gerado com Sucesso')
+                                    ->title(__('Refund Generated'))
+                                    ->body(__('Refund generated successfully'))
                                     ->success()
                                     ->send();
                             } catch (\Exception $e) {
 
                                 Notification::make()
-                                    ->title('Erro ao Criar Preço')
-                                    ->body('Ocorreu um erro ao gerar reembolso na Stripe: ' . $e->getMessage())
+                                    ->title(__('Error Creating Price'))
+                                    ->body(__('An error occurred while generating refund in Stripe: ') . $e->getMessage())
                                     ->danger()
                                     ->send();
                             }
                         }),
 
-                    Action::make('Baixar Invoice')
-                        ->label('Baixar Invoice')
+                    Action::make('Download Invoice')
+                        ->label(__('Download Invoice'))
                         ->icon('heroicon-o-document-arrow-down')
                         ->url(fn ($record) => $record->invoice_pdf)
-                        ->tooltip('Baixar PDF da Fatura')
+                        ->tooltip(__('Download Invoice PDF'))
                         ->color('primary'),
 
                 ])

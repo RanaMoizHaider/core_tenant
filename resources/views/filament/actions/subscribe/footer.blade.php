@@ -9,7 +9,7 @@
 
     <div class="pb-[76px]">
         <h2 class="mb-4 text-base font-semibold text-gray-900 dark:text-white">
-            Seus Benefícios
+            Your Benefits
         </h2>
 
         <div class="space-y-4">
@@ -29,7 +29,7 @@
     </div>
 
     <div class="relative bg-white border-t border-gray-200 rounded-b-xl dark:bg-gray-900 dark:border-gray-800">
-        <!-- Preço e informações -->
+        <!-- Price and information -->
         <div class="px-10 py-4">
             <div class="flex flex-wrap items-baseline gap-1">
                 @foreach (StripeDataLoader::getProductsData()->first()['prices'] as $price)
@@ -39,7 +39,7 @@
                         </span>
                         <span class="text-sm text-gray-500 dark:text-gray-400"> / </span>
                         <span class="text-sm text-gray-500 dark:text-gray-400">
-                            por {{ $price['interval_description'] }}
+                            per {{ $price['interval_description'] }}
 
                         </span>
                     </div>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <!-- Botão centralizado, abaixo do preço, ocupando toda a largura da modal -->
+        <!-- Centered button below price, occupying full modal width -->
         <div class="justify-center">
             {{ $action->getModalAction('checkout') }}
         </div>

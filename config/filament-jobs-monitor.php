@@ -4,9 +4,9 @@ declare(strict_types = 1);
 return [
     'resources' => [
         'enabled'                => true,
-        'label'                  => 'Fila',
-        'plural_label'           => 'Filas',
-        'navigation_group'       => 'Sistema',
+        'label'                  => 'Queue',
+        'plural_label'           => 'Queues',
+        'navigation_group'       => 'System',
         'navigation_icon'        => 'heroicon-o-cpu-chip',
         'navigation_sort'        => null,
         'record_title_attribute' => 'jobs',
